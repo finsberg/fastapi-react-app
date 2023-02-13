@@ -1,10 +1,9 @@
-import { ReactJSXElement } from '@emotion/react/types/jsx-namespace'
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 
 type PublicRouteType = {
-  children: ReactJSXElement
+  children: any
 }
 
 export const PublicRoute = ({ children }: PublicRouteType) => {

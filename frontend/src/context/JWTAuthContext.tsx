@@ -11,7 +11,7 @@ const initialState = {
 
 export const AuthContext = createContext({
   ...initialState,
-  login: () => Promise.resolve(),
+  login: (username: string, password: string) => Promise.resolve(),
   logout: () => Promise.resolve(),
 })
 
@@ -96,17 +96,17 @@ export const AuthProvider = ({ children }: AuthProviderType) => {
     isMounted.current = true
   }, [])
 
-  const getTokens = async (email: string, password: string) => {
+  const getTokens = async (username: string, password: string) => {
     const formData = new FormData()
-    formData.append('username', email)
+    formData.append('username', username)
     formData.append('password', password)
     const response = await axiosInstance.post('/auth/login', formData)
     setSession(response.data.access_token, response.data.refresh_token)
   }
 
-  const login = async (email: string, password: string) => {
+  const login = async (username: string, password: string) => {
     try {
-      await getTokens(email, password)
+      await getTokens(username, password)
       const response = await axiosInstance.get('/users/me')
       const { data: user } = response
       dispatch({

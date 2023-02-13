@@ -3,6 +3,7 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   Heading,
   Input,
   useColorModeValue,
@@ -12,29 +13,41 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { ThemeToggler } from '../Theme/ThemeToggler'
+import { LoginUserType } from './UserType.types'
 
 export const Login = () => {
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-  } = useForm()
+  } = useForm<LoginUserType>()
   const navigate = useNavigate()
   const { login } = useAuth()
   const toast = useToast()
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (values: LoginUserType) => {
     try {
-      await login(values.email, values.password)
+      await login(values.username, values.password)
     } catch (error) {
       toast({
-        title: 'Invalid email or password',
+        title: 'Invalid username or password',
         status: 'error',
         isClosable: true,
         duration: 1500,
       })
     }
   }
+
+  let usernameMessage = ''
+  if (errors.username?.message !== undefined) {
+    usernameMessage = errors.username.message.toString()
+  }
+
+  let passwordMessage = ''
+  if (errors.password?.message !== undefined) {
+    passwordMessage = errors.password.message.toString()
+  }
+
   return (
     <Flex height="100vh" alignItems="center" justifyContent="center">
       <Flex
@@ -46,22 +59,20 @@ export const Login = () => {
       >
         <Heading mb={6}>Login</Heading>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <FormControl isInvalid={errors.email}>
+          <FormControl isInvalid={usernameMessage !== ''}>
             <Input
-              placeholder="Email"
+              placeholder="Username"
               background={useColorModeValue('gray.300', 'gray.600')}
-              type="email"
+              type="username"
               size="lg"
               mt={6}
-              {...register('email', {
+              {...register('username', {
                 required: 'This is required field',
               })}
             />
-            <FormErrorMessage>
-              {errors.email && errors.email.message}
-            </FormErrorMessage>
+            <FormErrorMessage>{usernameMessage}</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={errors.email}>
+          <FormControl isInvalid={passwordMessage !== ''}>
             <Input
               placeholder="Password"
               background={useColorModeValue('gray.300', 'gray.600')}
@@ -72,9 +83,7 @@ export const Login = () => {
                 required: 'This is required field',
               })}
             />
-            <FormErrorMessage>
-              {errors.password && errors.password.message}
-            </FormErrorMessage>
+            <FormErrorMessage>{passwordMessage}</FormErrorMessage>
           </FormControl>
           <Button
             isLoading={isSubmitting}

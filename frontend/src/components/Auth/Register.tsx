@@ -11,18 +11,20 @@ import {
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../services/axios'
+import axios from 'axios'
 import { ThemeToggler } from '../Theme/ThemeToggler'
+import { LoginUserType } from './UserType.types'
 
 export const Register = () => {
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-  } = useForm()
+  } = useForm<LoginUserType>()
   const navigate = useNavigate()
   const toast = useToast()
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (values: LoginUserType) => {
     try {
       await axiosInstance.post('/users/create', values)
       toast({
@@ -33,14 +35,34 @@ export const Register = () => {
       })
       navigate('/login', { replace: true })
     } catch (err) {
+      console.log(err)
+      let message = 'An error occurred when trying to log in'
+      if (axios.isAxiosError(err)) {
+        message = err.response?.data.detail
+      }
       toast({
-        title: `${err.response.data.detail}`,
+        title: message,
         status: 'error',
-        isCloseable: true,
+        isClosable: true,
         duration: 1500,
       })
     }
   }
+  let emailMessage = ''
+  if (errors.email?.message !== undefined) {
+    emailMessage = errors.email.message.toString()
+  }
+
+  let usernameMessage = ''
+  if (errors.username?.message !== undefined) {
+    usernameMessage = errors.username.message.toString()
+  }
+
+  let passwordMessage = ''
+  if (errors.password?.message !== undefined) {
+    passwordMessage = errors.password.message.toString()
+  }
+
   return (
     <Flex height="100vh" alignItems="center" justifyContent="center">
       <Flex
@@ -52,7 +74,7 @@ export const Register = () => {
       >
         <Heading mb={6}>Register</Heading>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <FormControl isInvalid={errors.email}>
+          <FormControl isInvalid={emailMessage !== ''}>
             <Input
               placeholder="Email"
               background={useColorModeValue('gray.300', 'gray.600')}
@@ -63,11 +85,9 @@ export const Register = () => {
                 required: 'This is required field',
               })}
             />
-            <FormErrorMessage>
-              {errors.email && errors.email.message}
-            </FormErrorMessage>
+            <FormErrorMessage>{emailMessage}</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={errors.username}>
+          <FormControl isInvalid={usernameMessage !== ''}>
             <Input
               placeholder="username"
               background={useColorModeValue('gray.300', 'gray.600')}
@@ -87,11 +107,9 @@ export const Register = () => {
                 },
               })}
             />
-            <FormErrorMessage>
-              {errors.username && errors.username.message}
-            </FormErrorMessage>
+            <FormErrorMessage>{usernameMessage}</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={errors.email}>
+          <FormControl isInvalid={passwordMessage !== ''}>
             <Input
               placeholder="Password"
               background={useColorModeValue('gray.300', 'gray.600')}
