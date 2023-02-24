@@ -1,10 +1,28 @@
 from datetime import datetime, timedelta
-from passlib.context import CryptContext
 from typing import Union, Any
-from app.core.config import settings
+from uuid import UUID
+
+from passlib.context import CryptContext
 import jwt
+from pydantic import BaseModel
+
+from app.core.config import settings
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+class UnauthorizedError(RuntimeError):
+    pass
+
+
+class TokenSchema(BaseModel):
+    access_token: str
+    refresh_token: str
+
+
+class TokenPayload(BaseModel):
+    sub: UUID = None
+    exp: int = None
 
 
 def create_access_token(subject: Union[str, Any], expires_delta: int = None) -> str:

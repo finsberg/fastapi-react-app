@@ -23,7 +23,7 @@ export const TodoCard = ({ todo }: TodoCardType) => {
         cursor: 'pointer',
         transform: 'translateY(-3px)',
       }}
-      onClick={() => navigate(`/${todo.id}`, { replace: true })}
+      onClick={() => navigate(`/todo/${todo.id}`, { replace: true })}
     >
       <Text>{todo.title}</Text>
       <Badge colorScheme={todo.status ? 'blue' : 'orange'}>

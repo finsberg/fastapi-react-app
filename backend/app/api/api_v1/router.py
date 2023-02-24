@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+
 from app.api.api_v1.handlers import user
 from app.api.api_v1.handlers import todo
 from app.api.auth.jwt import auth_router
@@ -12,4 +13,4 @@ router.include_router(auth_router, prefix="/auth", tags=["auth"])
 
 @router.get("/health", tags=["health"])
 async def health():
-    return {"message": "OK"}
+    return {"msg": "OK"}

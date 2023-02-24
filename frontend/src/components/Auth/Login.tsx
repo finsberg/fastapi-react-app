@@ -3,8 +3,13 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   Heading,
+  Stack,
+  Text,
+  Link,
+  Box,
+  FormLabel,
+  Checkbox,
   Input,
   useColorModeValue,
   useToast,
@@ -21,6 +26,7 @@ export const Login = () => {
     register,
     formState: { errors, isSubmitting },
   } = useForm<LoginUserType>()
+
   const navigate = useNavigate()
   const { login } = useAuth()
   const toast = useToast()
@@ -49,65 +55,95 @@ export const Login = () => {
   }
 
   return (
-    <Flex height="100vh" alignItems="center" justifyContent="center">
+    <Flex
+      minH={'100vh'}
+      align={'center'}
+      justify={'center'}
+      bg={useColorModeValue('gray.50', 'gray.800')}
+    >
       <Flex
         direction="column"
         alignItems="center"
-        background={useColorModeValue('gray.100', 'gray.700')}
+        background={useColorModeValue('gray.50', 'gray.800')}
         p={12}
         rounded={6}
       >
-        <Heading mb={6}>Login</Heading>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FormControl isInvalid={usernameMessage !== ''}>
-            <Input
-              placeholder="Username"
-              background={useColorModeValue('gray.300', 'gray.600')}
-              type="username"
-              size="lg"
-              mt={6}
-              {...register('username', {
-                required: 'This is required field',
-              })}
-            />
-            <FormErrorMessage>{usernameMessage}</FormErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={passwordMessage !== ''}>
-            <Input
-              placeholder="Password"
-              background={useColorModeValue('gray.300', 'gray.600')}
-              type="password"
-              size="lg"
-              mt={6}
-              {...register('password', {
-                required: 'This is required field',
-              })}
-            />
-            <FormErrorMessage>{passwordMessage}</FormErrorMessage>
-          </FormControl>
-          <Button
-            isLoading={isSubmitting}
-            loadingText="Logging in..."
-            width="100%"
-            colorScheme="green"
-            variant="outline"
-            mt={6}
-            mb={6}
-            type="submit"
+        <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+          <Stack align={'center'}>
+            <Heading fontSize={'4xl'}>Sign in to your account</Heading>
+            <Text fontSize={'lg'} color={'gray.600'}>
+              to enjoy all of our cool <Link color={'blue.400'}>features</Link>{' '}
+              ✌️
+            </Text>
+          </Stack>
+          <Box
+            rounded={'lg'}
+            bg={useColorModeValue('white', 'gray.700')}
+            boxShadow={'lg'}
+            p={8}
           >
-            Login
-          </Button>
-        </form>
-        <ThemeToggler showLabel={true} />
-        <Button
-          onClick={() => navigate('/register', { replace: true })}
-          width="100%"
-          colorScheme="gray"
-          variant="outline"
-          mt={6}
-        >
-          Register Instead
-        </Button>
+            <Stack spacing={4}>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <FormControl id="username" isInvalid={usernameMessage !== ''}>
+                  <FormLabel>Username</FormLabel>
+                  <Input
+                    type="text"
+                    {...register('username', {
+                      required: 'This is required field',
+                    })}
+                  />
+                  <FormErrorMessage>{usernameMessage}</FormErrorMessage>
+                </FormControl>
+                <FormControl id="password" isInvalid={passwordMessage !== ''}>
+                  <FormLabel>Password</FormLabel>
+                  <Input
+                    type="password"
+                    {...register('password', {
+                      required: 'This is required field',
+                    })}
+                  />
+                  <FormErrorMessage>{passwordMessage}</FormErrorMessage>
+                </FormControl>
+                <Stack spacing={10}>
+                  <Stack
+                    direction={{ base: 'column', sm: 'row' }}
+                    align={'start'}
+                    justify={'space-between'}
+                  >
+                    <Checkbox>Remember me</Checkbox>
+                    <Link color={'blue.400'}>Forgot password?</Link>
+                  </Stack>
+                  <Button
+                    isLoading={isSubmitting}
+                    loadingText="Logging in..."
+                    bg={'blue.400'}
+                    color={'white'}
+                    type="submit"
+                    _hover={{
+                      bg: 'blue.500',
+                    }}
+                  >
+                    Sign in
+                  </Button>
+                </Stack>
+              </form>
+              <Stack align={'center'}>
+                <ThemeToggler showLabel={true} />
+              </Stack>
+              <Stack pt={6}>
+                <Text align={'center'}>
+                  Don&apos;t have an account yet?{' '}
+                  <Link
+                    color={'blue.400'}
+                    onClick={() => navigate('/register', { replace: true })}
+                  >
+                    Register
+                  </Link>
+                </Text>
+              </Stack>
+            </Stack>
+          </Box>
+        </Stack>
       </Flex>
     </Flex>
   )

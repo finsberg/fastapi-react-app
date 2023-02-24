@@ -1,77 +1,68 @@
 from typing import List, Optional
 from uuid import UUID
-from app.models.user_model import User
-from app.models.todo_model import Todo
-from app.schemas.todo_schema import TodoCreate, TodoUpdate
-from app.database import engine
+
 from sqlmodel import Session, select
 
+from app.models.user_model import User
+from app.models.todo_model import Todo, TodoCreate, TodoUpdate
 
-class TodoService:
-    @staticmethod
-    async def list_todos(user: User) -> List[Todo]:
-        with Session(engine) as session:
-            statement = select(Todo)
-            results = session.exec(statement)
-            todos = results.all()
 
-        return todos
+async def list_todos(user: User, session: Session) -> List[Todo]:
 
-    @staticmethod
-    async def create_todo(user: User, data: TodoCreate) -> Todo:
-        todo = Todo(**data.dict(), user_id=user.id)
-        with Session(engine) as session:
-            session.add(todo)
-            session.commit()
-            session.refresh(todo)
+    statement = select(Todo).where(Todo.user_id == user.id)
+    results = session.exec(statement)
+    todos = results.all()
 
-        return todo
+    return todos
 
-    @staticmethod
-    async def retrieve_todo(
-        current_user: User, todo_id: UUID, session: Optional[Session] = None
-    ) -> Optional[Todo]:
-        close_session = True
-        if session is None:
-            session = Session(engine)
 
-        statement = (
-            select(Todo)
-            .where(Todo.id == todo_id)
-            .where(Todo.user_id == current_user.id)
-        )
+async def create_todo(user: User, data: TodoCreate, session: Session) -> Todo:
+    todo = Todo(
+        title=data.title,
+        description=data.description,
+        status=data.status,
+        user_id=user.id,
+    )
 
-        results = session.exec(statement)
-        todo = results.first()
-        if close_session:
-            session.close()
+    session.add(todo)
+    session.commit()
+    session.refresh(todo)
 
-        return todo
+    return todo
 
-    @staticmethod
-    async def update_todo(current_user: User, todo_id: UUID, data: TodoUpdate) -> Todo:
 
-        todo_data = data.dict(exclude_unset=True)
-        with Session(engine) as session:
-            todo = await TodoService.retrieve_todo(
-                current_user, todo_id, session=session
-            )
-            for key, value in todo_data.items():
-                setattr(todo, key, value)
-            session.add(todo)
-            session.commit()
-            session.refresh(todo)
+async def retrieve_todo(user: User, todo_id: UUID, session: Session) -> Optional[Todo]:
 
-            return todo
+    statement = select(Todo).where(Todo.id == todo_id).where(Todo.user_id == user.id)
 
-    @staticmethod
-    async def delete_todo(current_user: User, todo_id: UUID) -> None:
+    results = session.exec(statement)
+    todo = results.first()
 
-        with Session(engine) as session:
-            todo = await TodoService.retrieve_todo(
-                current_user, todo_id, session=session
-            )
-            session.delete(todo)
-            session.commit()
+    return todo
 
-        return None
+
+async def update_todo(
+    user: User, todo_id: UUID, data: TodoUpdate, session: Session
+) -> Todo:
+
+    todo_data = data.dict(exclude_unset=True)
+    todo = await retrieve_todo(user, todo_id, session=session)
+
+    for key, value in todo_data.items():
+        print(key, value)
+        setattr(todo, key, value)
+
+    session.add(todo)
+    session.commit()
+    session.refresh(todo)
+
+    return todo
+
+
+async def delete_todo(user: User, todo_id: UUID, session: Session) -> None:
+
+    todo = await retrieve_todo(user, todo_id, session=session)
+    session.delete(todo)
+    session.commit()
+
+    return None

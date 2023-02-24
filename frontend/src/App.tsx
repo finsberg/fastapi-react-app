@@ -9,10 +9,13 @@ import { Authenticated } from './components/Auth/Authenticated'
 import { Login } from './components/Auth/Login'
 import { PublicRoute } from './components/Auth/PublicRoute'
 import { Register } from './components/Auth/Register'
-import { NavBar } from './components/Navbar/NavBar'
+import { SidebarWithHeader } from './components/Sidebar/Sidebar'
 import { TodoDetail } from './components/Todo/TodoDetail'
 import { TodoList } from './components/Todo/TodoList'
 import { AuthConsumer, AuthProvider } from './context/JWTAuthContext'
+import { UserProfile } from './components/User/Profile'
+import { Home } from './components/Home/Home'
+import { Users } from './components/User/Users'
 
 function App() {
   return (
@@ -53,24 +56,56 @@ function App() {
                       </PublicRoute>
                     }
                   />
-                  <Route path="/" element={<NavBar />}>
-                    <Route
-                      path="/"
-                      element={
-                        <Authenticated>
+                  <Route
+                    path="/"
+                    element={
+                      <Authenticated>
+                        <Home />
+                      </Authenticated>
+                    }
+                  />
+
+                  <Route
+                    path="/todo"
+                    element={
+                      <Authenticated>
+                        <SidebarWithHeader>
                           <TodoList />
-                        </Authenticated>
-                      }
-                    />
-                    <Route
-                      path="/:id"
-                      element={
-                        <Authenticated>
+                        </SidebarWithHeader>
+                      </Authenticated>
+                    }
+                  />
+                  <Route
+                    path="/todo/:id"
+                    element={
+                      <Authenticated>
+                        <SidebarWithHeader>
                           <TodoDetail />
-                        </Authenticated>
-                      }
-                    />
-                  </Route>
+                        </SidebarWithHeader>
+                      </Authenticated>
+                    }
+                  />
+                  <Route
+                    path="/user"
+                    element={
+                      <Authenticated>
+                        <SidebarWithHeader>
+                          <UserProfile />
+                        </SidebarWithHeader>
+                      </Authenticated>
+                    }
+                  />
+                  <Route
+                    path="/users"
+                    element={
+                      <Authenticated>
+                        <SidebarWithHeader>
+                          <Users />
+                        </SidebarWithHeader>
+                      </Authenticated>
+                    }
+                  />
+
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
               )

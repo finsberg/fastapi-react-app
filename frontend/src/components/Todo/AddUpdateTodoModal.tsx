@@ -47,7 +47,7 @@ export const AddUpdateTodoModal = ({
       if (editable) {
         await axiosInstance.put(`/todo/${id}`, values)
       } else {
-        await axiosInstance.post(`/todo/create/`, values)
+        await axiosInstance.post(`/todo/`, values)
       }
       toast({
         title: editable ? 'Todo Updated' : 'Todo Added',
@@ -83,7 +83,7 @@ export const AddUpdateTodoModal = ({
         <ModalOverlay />
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalContent>
-            <ModalHeader>{editable ? 'Update Fodo' : 'ADD FODO'}</ModalHeader>
+            <ModalHeader>{editable ? 'Update Todo' : 'ADD Todo'}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <FormControl isInvalid={errors.title !== undefined}>

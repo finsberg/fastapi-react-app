@@ -14,16 +14,16 @@ export const ThemeToggler = ({
     <>
       {showLabel && (
         <FormLabel htmlFor="theme-toggler" mb={0}>
-          Enable Dark Theme
+          Enable {colorMode === 'dark' ? 'Light' : 'Dark'} Theme
         </FormLabel>
       )}
       <Switch
         id="theme-toggler"
-        size="sm"
+        size="md"
         isChecked={colorMode === 'dark'}
         isDisabled={false}
         value={colorMode}
-        colorScheme="orange"
+        colorScheme="yellow"
         mr={2}
         onChange={toggleColorMode}
         {...rest}

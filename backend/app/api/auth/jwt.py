@@ -1,15 +1,24 @@
+from typing import Any
+
+
 from fastapi import APIRouter, Depends, HTTPException, status, Body
 from fastapi.security import OAuth2PasswordRequestForm
-from typing import Any
-from app.services.user_service import UserService
-from app.core.security import create_access_token, create_refresh_token
-from app.schemas.auth_schema import TokenSchema
+
+from pydantic import ValidationError
+from sqlmodel import Session
+import jwt
+
+from app.services import user_service
+from app.core.security import (
+    create_access_token,
+    create_refresh_token,
+    TokenPayload,
+    TokenSchema,
+)
 from app.models.user_model import User
+from app.database import get_session
 from app.api.deps.user_deps import get_current_user
 from app.core.config import settings
-from app.schemas.auth_schema import TokenPayload
-from pydantic import ValidationError
-import jwt
 
 
 auth_router = APIRouter()
@@ -20,9 +29,13 @@ auth_router = APIRouter()
     summary="Create access and refresh tokens for user",
     response_model=TokenSchema,
 )
-async def login(form_data: OAuth2PasswordRequestForm = Depends()) -> Any:
-    user = await UserService.authenticate(
-        email=form_data.username, password=form_data.password
+async def login(
+    *,
+    session: Session = Depends(get_session),
+    form_data: OAuth2PasswordRequestForm = Depends()
+) -> Any:
+    user = await user_service.authenticate(
+        username=form_data.username, password=form_data.password, session=session
     )
     if not user:
         raise HTTPException(
@@ -58,7 +71,7 @@ async def refresh_token(refresh_token: str = Body(...)):
             detail="Invalid token",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    user = await UserService.get_user_by_id(token_data.sub)
+    user = await user_service.get_user_by_id(token_data.sub)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

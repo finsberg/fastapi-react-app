@@ -52,7 +52,7 @@ export const TodoDetail = () => {
           isClosable: true,
           duration: 1500,
         })
-        navigate('/')
+        navigate('/todo')
       })
       .catch((err) => {
         console.error(err)
@@ -87,7 +87,7 @@ export const TodoDetail = () => {
       <Container mt={6}>
         <Button
           colorScheme="gray"
-          onClick={() => navigate('/', { replace: true })}
+          onClick={() => navigate('/todo', { replace: true })}
         >
           Back
         </Button>

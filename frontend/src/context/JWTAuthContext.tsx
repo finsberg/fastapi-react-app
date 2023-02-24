@@ -2,6 +2,7 @@ import { createContext, useEffect, useReducer, useRef } from 'react'
 import axiosInstance from '../services/axios'
 import { validateToken } from '../utils/jwt'
 import { resetSession, setSession } from '../utils/session'
+import { LoginUserType } from '../components/Auth/UserType.types'
 
 const initialState = {
   isAuthenticated: false,
@@ -9,14 +10,27 @@ const initialState = {
   user: null,
 }
 
+type StateType = {
+  isAuthenticated: boolean
+  isInitialized: boolean
+  user: LoginUserType
+}
+
+type ActionInitialize = { type: 'INITIALIZE'; payload: any }
+type ActionLogin = { type: 'LOGIN'; payload: any }
+type ActionLogout = { type: 'LOGOUT' }
+
+type ActionType = ActionInitialize | ActionLogin | ActionLogout
+
 export const AuthContext = createContext({
   ...initialState,
   login: (username: string, password: string) => Promise.resolve(),
   logout: () => Promise.resolve(),
+  reset: () => Promise.resolve(),
 })
 
 const handlers = {
-  INITIALIZE: (state, action) => {
+  INITIALIZE: (state: StateType, action: ActionInitialize) => {
     const { isAuthenticated, user } = action.payload
 
     return {
@@ -26,7 +40,7 @@ const handlers = {
       user,
     }
   },
-  LOGIN: (state, action) => {
+  LOGIN: (state: StateType, action: ActionLogin) => {
     const { user } = action.payload
 
     return {
@@ -35,7 +49,7 @@ const handlers = {
       user,
     }
   },
-  LOGOUT: (state) => {
+  LOGOUT: (state: StateType) => {
     return {
       ...state,
       isAuthenticated: false,
@@ -44,7 +58,7 @@ const handlers = {
   },
 }
 
-const reducer = (state, action) =>
+const reducer = (state: StateType, action: ActionType) =>
   handlers[action.type] ? handlers[action.type](state, action) : state
 
 type AuthProviderType = {
@@ -120,6 +134,21 @@ export const AuthProvider = ({ children }: AuthProviderType) => {
     }
   }
 
+  const reset = async () => {
+    try {
+      const response = await axiosInstance.get('/users/me')
+      const { data: user } = response
+      dispatch({
+        type: 'LOGIN',
+        payload: {
+          user,
+        },
+      })
+    } catch (err) {
+      return Promise.reject(err)
+    }
+  }
+
   const logout = () => {
     resetSession()
     dispatch({ type: 'LOGOUT' })
@@ -131,6 +160,7 @@ export const AuthProvider = ({ children }: AuthProviderType) => {
         ...state,
         login,
         logout,
+        reset,
       }}
     >
       {children}
