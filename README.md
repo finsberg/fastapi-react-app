@@ -111,7 +111,7 @@ There also automated tests
 ### Pre-commit hooks
 There are set of pre-commit hooks defined in the [.pre-commit-config.yaml](.pre-commit-config.yaml) which will run linters and formatter on both the python and javascript code.
 
-These are also run in the CI using [GitHub actions](.github/workflows/pre-commit.yml). If you want make sure that the pre-commit hooks are regularly updated, then you might consider to set up (pre-commit.ci)[http://pre-commit.ci] instead.
+These are also run in the CI using [GitHub actions](.github/workflows/pre-commit.yml). If you want make sure that the pre-commit hooks are regularly updated, then you might consider to set up [pre-commit.ci](http://pre-commit.ci) instead.
 
 ### Testing the backend
 You can run the backend tests with pytest. First go to the `backend` directory
