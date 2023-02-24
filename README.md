@@ -1,6 +1,6 @@
-# TODO list
+# Fast API + SQLModel + React example
 
-This is an implementation of a TODO list.
+This is an implementation of a simple TODO list with authentication using FastAPI, SQLModel and React.
 
 ## Tech stack
 
