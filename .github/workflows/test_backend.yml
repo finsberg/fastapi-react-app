@@ -19,6 +19,9 @@ jobs:
       - name: Install dependencies
         run: |
           python3 -m pip install -r backend/dev-requirements.txt
+      - name: Setup secrets
+        run: |
+          cp backend/.env.example backend/.env
       - name: Test with pytest
         run: |
           cd backend && python3 -m pytest -vv

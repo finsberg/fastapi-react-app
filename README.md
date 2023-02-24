@@ -57,6 +57,18 @@ npm install
 
 Once you have installed the dependencies you can run both the backend and frontend server.
 
+## Setting up the secrets
+Before running the backend we need to set up the secrets. You do this by creating the file `backend/.env` with the following content
+```
+JWT_SECRET_KEY=my-secret
+JWT_REFRESH_SECRET_KEY=another-secret
+SQL_CONNECTION_STRING=sqlite:///database.db
+```
+See [.env.exmple](backend/.env.example) for an example file.
+
+Of course the secret keys should be changed when moving to production. We will also use a simple SQLite database i.e `database.db` stored in the same folder. If you want to reset the database, you can just delete this file.
+
+
 ### Running the backend
 We will use `uvicorn` to run the backend. Go in to the `backend` directory
 ```
