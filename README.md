@@ -37,6 +37,11 @@ python3 -m pip install -r requirements.txt
 ```
 Note that the dependencies are generated from the `requirements.in` file and compiled with [`pip-tools`](https://github.com/jazzband/pip-tools/).
 
+If you want to run the tests you also need to install the dev-requirements, i.e
+```
+python3 -m pip install dev-requirements.txt
+```
+
 
 ### Installing the frontend dependencies
 First go in to the `frontend` directory
@@ -67,7 +72,7 @@ curl localhost:8000/api/v1/health
 ```
 You should now see the following output
 ```
-{"message":"OK"}
+{"msg":"OK"}
 ```
 You can also go to `http://localhost:8000/docs` to see the OpenAPI documentation for the endpoints.
 
@@ -85,3 +90,28 @@ If you don't have `yarn` install, you can also use
 npm run dev
 ```
 The frontend server should now run on <http://localhost:5173/>, which you can open in the browser.
+
+
+## Testing
+
+There also automated tests
+
+### Pre-commit hooks
+There are set of pre-commit hooks defined in the [.pre-commit-config.yaml](.pre-commit-config.yaml) which will run linters and formatter on both the python and javascript code.
+
+These are also run in the CI using [GitHub actions](.github/workflows/pre-commit.yml). If you want make sure that the pre-commit hooks are regularly updated, then you might consider to set up (pre-commit.ci)[http://pre-commit.ci] instead.
+
+### Testing the backend
+You can run the backend tests with pytest. First go to the `backend` directory
+```
+cd backend
+```
+and then run `pytest`
+```
+python3 -m pytest -vv
+```
+There is also a [GitHub action](.github/workflows/test_backend.yml) to run run the tests in CI.
+
+
+### Testing the frontend
+TODO
