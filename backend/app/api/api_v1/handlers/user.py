@@ -8,9 +8,9 @@ from app.core import security
 from app.services import user_service
 from app.database import get_session
 from app.models.user_model import User, UserUpdate, UserCreate
-from app.api.deps.user_deps import get_current_user, oauth2_scheme
+from app.api.deps.user_deps import get_current_user  # , oauth2_scheme
 
-user_router = APIRouter(dependencies=[Depends(oauth2_scheme)])
+user_router = APIRouter()  # dependencies=[Depends(oauth2_scheme)])
 
 
 @user_router.post("/", summary="Create new user", response_model=User)
