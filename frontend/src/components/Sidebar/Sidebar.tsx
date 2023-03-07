@@ -110,9 +110,6 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
           {link.name}
         </NavItem>
       ))}
-      <NavItem key="themeToggler">
-        <ThemeToggler size="lg" />
-      </NavItem>
     </Box>
   )
 }
@@ -193,6 +190,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       </Text>
 
       <HStack spacing={{ base: '0', md: '6' }}>
+        <ThemeToggler size="lg" />
         <IconButton
           size="lg"
           variant="ghost"

@@ -23,20 +23,27 @@ import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../services/axios'
 import axios from 'axios'
 import { ThemeToggler } from '../Theme/ThemeToggler'
-import { LoginUserType } from './UserType.types'
+
+export type RegisterUserProps = {
+  username: string
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+}
 
 export const Register = () => {
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-  } = useForm<LoginUserType>()
+  } = useForm<RegisterUserProps>()
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
 
   const toast = useToast()
 
-  const onSubmit = async (values: LoginUserType) => {
+  const onSubmit = async (values: RegisterUserProps) => {
     try {
       await axiosInstance.post('/users', values)
       toast({
