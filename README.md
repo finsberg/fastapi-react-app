@@ -126,4 +126,25 @@ There is also a [GitHub action](.github/workflows/test_backend.yml) to run run t
 
 
 ### Testing the frontend
-TODO
+The frontend tests are run with [vitetest](https://vitest.dev). To run the tests you need to first go to the `frontend` directory
+```
+cd frontend
+```
+and then run
+```
+yarn test
+```
+This will run the test, watch for changes and then rerun the tests it is detects changes. There is also a UI version that can be using using
+```
+yarn test:ui
+```
+Which will also open a dashboard with the test run in the browser.
+You can also just run the tests without watching for changes with the command
+```
+yarn test:run
+```
+To get coverage report, you can run
+```
+yarn coverage
+```
+Finally, there is a [GitHub action](.github/workflows/test_frontend.yml) to run run the tests in CI.
