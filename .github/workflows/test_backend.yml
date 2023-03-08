@@ -1,6 +1,11 @@
-name: Python package
+name: Test backend
 
-on: [push]
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
 
 jobs:
   build:
@@ -24,4 +29,4 @@ jobs:
           cp backend/.env.example backend/.env
       - name: Test with pytest
         run: |
-          cd backend && python3 -m pytest -vv
+          cd backend && python3 -m pytest
