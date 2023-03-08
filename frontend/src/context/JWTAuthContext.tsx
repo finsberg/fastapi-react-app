@@ -2,22 +2,31 @@ import { createContext, useEffect, useReducer, useRef } from 'react'
 import axiosInstance from '../services/axios'
 import { validateToken } from '../utils/jwt'
 import { resetSession, setSession } from '../utils/session'
-import { LoginUserType } from '../components/Auth/UserType.types'
 
-const initialState = {
+type UserProps = {
+  username: string
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  id: string
+  is_admin: boolean
+}
+
+type StateType = {
+  user: UserProps | null
+  isAuthenticated?: boolean
+  isInitialized?: boolean
+}
+
+const initialState: StateType = {
   isAuthenticated: false,
   isInitialized: false,
   user: null,
 }
 
-type StateType = {
-  isAuthenticated: boolean
-  isInitialized: boolean
-  user: LoginUserType
-}
-
-type ActionInitialize = { type: 'INITIALIZE'; payload: any }
-type ActionLogin = { type: 'LOGIN'; payload: any }
+type ActionInitialize = { type: 'INITIALIZE'; payload: StateType }
+type ActionLogin = { type: 'LOGIN'; payload: StateType }
 type ActionLogout = { type: 'LOGOUT' }
 
 type ActionType = ActionInitialize | ActionLogin | ActionLogout
@@ -29,37 +38,39 @@ export const AuthContext = createContext({
   reset: () => Promise.resolve(),
 })
 
-const handlers = {
-  INITIALIZE: (state: StateType, action: ActionInitialize) => {
-    const { isAuthenticated, user } = action.payload
+function reducer(state: StateType, action: ActionType): StateType {
+  switch (action.type) {
+    case 'INITIALIZE': {
+      const { isAuthenticated, user } = action.payload
 
-    return {
-      ...state,
-      isAuthenticated,
-      isInitialized: true,
-      user,
+      return {
+        ...state,
+        isAuthenticated,
+        isInitialized: true,
+        user,
+      }
     }
-  },
-  LOGIN: (state: StateType, action: ActionLogin) => {
-    const { user } = action.payload
+    case 'LOGIN': {
+      const { user } = action.payload
 
-    return {
-      ...state,
-      isAuthenticated: true,
-      user,
+      return {
+        ...state,
+        isAuthenticated: true,
+        user,
+      }
     }
-  },
-  LOGOUT: (state: StateType) => {
-    return {
-      ...state,
-      isAuthenticated: false,
-      user: null,
+    case 'LOGOUT': {
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: null,
+      }
     }
-  },
+    default: {
+      return state
+    }
+  }
 }
-
-const reducer = (state: StateType, action: ActionType) =>
-  handlers[action.type] ? handlers[action.type](state, action) : state
 
 type AuthProviderType = {
   children: any
@@ -82,6 +93,7 @@ export const AuthProvider = ({ children }: AuthProviderType) => {
           dispatch({
             type: 'INITIALIZE',
             payload: {
+              ...state,
               isAuthenticated: true,
               user,
             },
@@ -90,6 +102,7 @@ export const AuthProvider = ({ children }: AuthProviderType) => {
           dispatch({
             type: 'INITIALIZE',
             payload: {
+              ...state,
               isAuthenticated: false,
               user: null,
             },
@@ -100,6 +113,7 @@ export const AuthProvider = ({ children }: AuthProviderType) => {
         dispatch({
           type: 'INITIALIZE',
           payload: {
+            ...state,
             isAuthenticated: false,
             user: null,
           },
@@ -118,7 +132,7 @@ export const AuthProvider = ({ children }: AuthProviderType) => {
     setSession(response.data.access_token, response.data.refresh_token)
   }
 
-  const login = async (username: string, password: string) => {
+  const login = async (username: string, password: string): Promise<void> => {
     try {
       await getTokens(username, password)
       const response = await axiosInstance.get('/users/me')
@@ -134,7 +148,7 @@ export const AuthProvider = ({ children }: AuthProviderType) => {
     }
   }
 
-  const reset = async () => {
+  const reset = async (): Promise<void> => {
     try {
       const response = await axiosInstance.get('/users/me')
       const { data: user } = response
@@ -149,7 +163,7 @@ export const AuthProvider = ({ children }: AuthProviderType) => {
     }
   }
 
-  const logout = () => {
+  const logout = async (): Promise<void> => {
     resetSession()
     dispatch({ type: 'LOGOUT' })
   }

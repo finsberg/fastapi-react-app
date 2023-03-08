@@ -18,20 +18,25 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { ThemeToggler } from '../Theme/ThemeToggler'
-import { LoginUserType } from './UserType.types'
+// import { LoginUserType } from './UserType.types'
+
+export type LoginUserProps = {
+  username: string
+  password: string
+}
 
 export const Login = () => {
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-  } = useForm<LoginUserType>()
+  } = useForm<LoginUserProps>()
 
   const navigate = useNavigate()
   const { login } = useAuth()
   const toast = useToast()
 
-  const onSubmit = async (values: LoginUserType) => {
+  const onSubmit = async (values: LoginUserProps) => {
     try {
       await login(values.username, values.password)
     } catch (error) {

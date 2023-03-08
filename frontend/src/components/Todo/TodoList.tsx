@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import axiosInstance from '../../services/axios'
 import { AddUpdateTodoModal } from './AddUpdateTodoModal'
 import { TodoCard } from './TodoCard'
-import { TodoType } from './types'
+import { TodoType } from './TodoDetail'
 
 export const TodoList = () => {
   const [todos, setTodos] = useState<TodoType[]>([])
@@ -16,7 +16,7 @@ export const TodoList = () => {
     isMounted.current = true
   }, [])
 
-  const fetchTodos = () => {
+  const fetchTodos = (): void => {
     setLoading(true)
     axiosInstance
       .get('/todo/')

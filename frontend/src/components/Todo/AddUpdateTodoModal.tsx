@@ -15,6 +15,7 @@ import {
   Stack,
   Switch,
   Textarea,
+  BoxProps,
   useColorModeValue,
   useDisclosure,
   useToast,
@@ -22,14 +23,21 @@ import {
 import { Controller, useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 import axiosInstance from '../../services/axios'
-import { AddUpdateTodoModalType, TodoType } from './types'
+import { TodoType } from './TodoDetail'
+
+export type AddUpdateTodoModalProps = {
+  editable?: boolean
+  defaultValues?: TodoType
+  onSuccess: () => void
+  style?: BoxProps
+}
 
 export const AddUpdateTodoModal = ({
   editable = false,
   defaultValues,
   onSuccess,
-  ...rest
-}: AddUpdateTodoModalType) => {
+  style = {},
+}: AddUpdateTodoModalProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
   const { id } = useParams()
@@ -38,11 +46,11 @@ export const AddUpdateTodoModal = ({
     register,
     control,
     formState: { errors, isSubmitting },
-  } = useForm({
+  } = useForm<TodoType>({
     defaultValues: { ...defaultValues },
   })
 
-  const onSubmit = async (values: TodoType) => {
+  const onSubmit = async (values: TodoType): Promise<void> => {
     try {
       if (editable) {
         await axiosInstance.put(`/todo/${id}`, values)
@@ -69,7 +77,7 @@ export const AddUpdateTodoModal = ({
   }
 
   return (
-    <Box {...rest}>
+    <Box {...style}>
       <Button w="100%" colorScheme="orange" onClick={onOpen}>
         {editable ? 'UPDATE TODO' : 'ADD TODO'}
       </Button>
@@ -115,7 +123,6 @@ export const AddUpdateTodoModal = ({
                   rows={5}
                   placeholder="Add description...."
                   background={useColorModeValue('gray.300', 'gray.600')}
-                  type="test"
                   variant="filled"
                   size="lg"
                   mt={6}

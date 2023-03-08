@@ -11,7 +11,13 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axiosInstance from '../../services/axios'
 import { AddUpdateTodoModal } from './AddUpdateTodoModal'
-import { TodoType } from './types'
+
+export type TodoType = {
+  id: string
+  title: string
+  status: boolean
+  description: string
+}
 
 export const TodoDetail = () => {
   const [todo, setTodo] = useState<TodoType | null>(null)
@@ -110,7 +116,7 @@ export const TodoDetail = () => {
               {todo.description}
             </Text>
             <AddUpdateTodoModal
-              my={3}
+              style={{ my: 3 }}
               editable={true}
               defaultValues={{
                 id: todo.id,

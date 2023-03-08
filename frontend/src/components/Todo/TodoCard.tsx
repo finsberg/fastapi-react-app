@@ -1,13 +1,13 @@
 import { Badge, Flex, Text, useColorModeValue } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
-import { TodoType } from './types'
+import { TodoType } from './TodoDetail'
 
-type TodoCardType = {
+type TodoCardProps = {
   todo: TodoType
   key: string
 }
 
-export const TodoCard = ({ todo }: TodoCardType) => {
+export const TodoCard = ({ todo }: TodoCardProps) => {
   const navigate = useNavigate()
   return (
     <Flex
