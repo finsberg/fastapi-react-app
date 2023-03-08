@@ -21,10 +21,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
-        run: yarn --frozen-lockfile
+        run: cd frontend && yarn --frozen-lockfile
       - name: Run tests with coverage
-        run: yarn coverage
+        run: cd frontend && yarn coverage
       - uses: actions/upload-artifact@v3
         with:
           name: frontend-coverage
-          path: coverage
+          path: frontend/coverage
