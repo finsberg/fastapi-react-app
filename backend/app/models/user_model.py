@@ -1,16 +1,19 @@
-from uuid import UUID, uuid4
+from uuid import UUID
+from uuid import uuid4
 
-from sqlmodel import Field, SQLModel
 from pydantic import EmailStr
+from sqlmodel import Field
+from sqlmodel import SQLModel
 
 
 class UserBase(SQLModel):
-    username: str = Field(index=True, unique=True, description="user username")
-    email: EmailStr = Field(unique=True, description="user email")
+    username: str | None = Field(index=True, unique=True, description="user username")
+    email: EmailStr | None = Field(unique=True, description="user email")
     firstName: str | None = Field(default=None, description="user first name")
     lastName: str | None = Field(default=None, description="user last name")
     isAdmin: bool = Field(
-        default=False, description="Flag to indicate wether user is admin"
+        default=False,
+        description="Flag to indicate wether user is admin",
     )
 
 
@@ -23,7 +26,10 @@ class UserUpdate(UserBase):
     username: str | None = Field(default=None, description="user username")
     email: EmailStr | None = Field(default=None, description="user email")
     new_password: str | None = Field(
-        default=None, min_length=5, max_length=24, description="new user password"
+        default=None,
+        min_length=5,
+        max_length=24,
+        description="new user password",
     )
     password: str = Field(description="user password")
 

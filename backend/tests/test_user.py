@@ -1,10 +1,8 @@
-from fastapi.testclient import TestClient
-
 from app.core.security import verify_password
+from fastapi.testclient import TestClient
 
 
 def test_create_user(client: TestClient, prefix: str):
-
     # Create user
     sent_data = {
         "username": "testuser",
@@ -32,7 +30,6 @@ def test_create_user(client: TestClient, prefix: str):
 
 
 def test_create_existing_user_raises_409(client: TestClient, prefix: str):
-
     # Create a user
     sent_data = {
         "username": "testuser",
@@ -56,7 +53,6 @@ def test_create_existing_user_raises_409(client: TestClient, prefix: str):
 
 
 def test_get_current_user(client: TestClient, prefix: str):
-
     # Get the current user
     response = client.get(prefix + "/users/me")
     assert response.status_code == 200
@@ -72,7 +68,6 @@ def test_get_current_user(client: TestClient, prefix: str):
 
 
 def test_update_user(client: TestClient, prefix: str):
-
     # Create a user
     sent_data = {
         "username": "testuser",
@@ -100,7 +95,8 @@ def test_update_user(client: TestClient, prefix: str):
     }
     # Update user
     updated_response = client.put(
-        prefix + f"/users/{updated_data['id']}", json=updated_data
+        prefix + f"/users/{updated_data['id']}",
+        json=updated_data,
     )
     assert updated_response.status_code == 200
     data = updated_response.json()
@@ -112,7 +108,6 @@ def test_update_user(client: TestClient, prefix: str):
 
 
 def test_update_user_with_wrong_password_raises_401(client: TestClient, prefix: str):
-
     # Create a user
     sent_data = {
         "username": "testuser",
@@ -134,6 +129,7 @@ def test_update_user_with_wrong_password_raises_401(client: TestClient, prefix: 
         "id": response.json()["id"],
     }
     updated_response = client.put(
-        prefix + f"/users/{updated_data['id']}", json=updated_data
+        prefix + f"/users/{updated_data['id']}",
+        json=updated_data,
     )
     assert updated_response.status_code == 401

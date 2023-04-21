@@ -1,13 +1,13 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-
 from app.api.api_v1.router import router
 from app.core.config import settings
 from app.database import create_db_and_tables
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI(
-    title=settings.PROJECT_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json"
+    title=settings.PROJECT_NAME,
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
 )
 
 app.add_middleware(
