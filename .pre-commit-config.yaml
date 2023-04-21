@@ -25,6 +25,7 @@ repos:
     rev: 'v0.0.262'
     hooks:
       - id: ruff
+        files: ^backend/.*\.py$
         args: [--fix, --exit-non-zero-on-fix]
 
   - repo: https://github.com/asottile/add-trailing-comma
