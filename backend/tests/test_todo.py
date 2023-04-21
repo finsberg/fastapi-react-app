@@ -2,7 +2,6 @@ from fastapi.testclient import TestClient
 
 
 def test_create_todo(client: TestClient, prefix: str):
-
     # Create a todo
     sent_data = {
         "title": "some title",
@@ -23,7 +22,6 @@ def test_create_todo(client: TestClient, prefix: str):
 
 
 def test_update_todo(client: TestClient, prefix: str):
-
     # Create a todo
     sent_data = {
         "title": "some title",
@@ -49,7 +47,6 @@ def test_update_todo(client: TestClient, prefix: str):
 
 
 def test_delete_todo(client: TestClient, prefix: str):
-
     # Create a todo
     sent_data = {
         "title": "some title",

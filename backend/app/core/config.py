@@ -1,7 +1,9 @@
 from typing import List
 
 from decouple import config
-from pydantic import AnyHttpUrl, BaseSettings
+from pydantic import AnyHttpUrl
+from pydantic import BaseSettings
+from pydantic import parse_obj_as
 
 
 class Settings(BaseSettings):
@@ -11,7 +13,9 @@ class Settings(BaseSettings):
     ALGORITHM = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
-    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = ["http://localhost:5173"]
+    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = [
+        parse_obj_as(AnyHttpUrl, "http://localhost:5173"),
+    ]
     PROJECT_NAME: str = "TODO list"
 
     # Database

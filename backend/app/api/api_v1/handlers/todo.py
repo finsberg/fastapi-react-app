@@ -1,13 +1,16 @@
 from typing import List
 from uuid import UUID
-from fastapi import APIRouter, Depends
-from sqlmodel import Session
 
-from app.models.user_model import User
-from app.database import get_session
 from app.api.deps.user_deps import get_current_user
+from app.database import get_session
+from app.models.todo_model import Todo
+from app.models.todo_model import TodoCreate
+from app.models.todo_model import TodoUpdate
+from app.models.user_model import User
 from app.services import todo_service
-from app.models.todo_model import Todo, TodoCreate, TodoUpdate
+from fastapi import APIRouter
+from fastapi import Depends
+from sqlmodel import Session
 
 todo_router = APIRouter()
 
@@ -48,7 +51,10 @@ async def update(
     user: User = Depends(get_current_user)
 ):
     return await todo_service.update_todo(
-        user=user, todo_id=todo_id, data=data, session=session
+        user=user,
+        todo_id=todo_id,
+        data=data,
+        session=session,
     )
 
 

@@ -1,19 +1,21 @@
 from datetime import datetime
 
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
 import jwt
+from app.core.config import settings
+from app.core.security import TokenPayload
+from app.database import get_session
+from app.models.user_model import User
+from app.services import user_service
+from fastapi import Depends
+from fastapi import HTTPException
+from fastapi import status
+from fastapi.security import OAuth2PasswordBearer
 from pydantic import ValidationError
 from sqlmodel import Session
 
-from app.services import user_service
-from app.core.security import TokenPayload
-from app.core.config import settings
-from app.models.user_model import User
-from app.database import get_session
-
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_V1_STR}/auth/login", scheme_name="JWT"
+    tokenUrl=f"{settings.API_V1_STR}/auth/login",
+    scheme_name="JWT",
 )
 
 
@@ -23,7 +25,9 @@ async def get_current_user(
 ) -> User:
     try:
         payload = jwt.decode(
-            token, settings.JWT_SECRET_KEY, algorithms=[settings.ALGORITHM]
+            token,
+            settings.JWT_SECRET_KEY,
+            algorithms=[settings.ALGORITHM],
         )
         token_data = TokenPayload(**payload)
 

@@ -1,15 +1,17 @@
-import pytest
 import functools
-from fastapi.testclient import TestClient
-from sqlmodel import Session, SQLModel, create_engine
-from sqlmodel.pool import StaticPool
 
-from app.main import app
-from app.models.user_model import User
-from app.database import get_session
-from app.core.security import get_password
+import pytest
 from app.api.deps.user_deps import get_current_user
 from app.core.config import settings
+from app.core.security import get_password
+from app.database import get_session
+from app.main import app
+from app.models.user_model import User
+from fastapi.testclient import TestClient
+from sqlmodel import create_engine
+from sqlmodel import Session
+from sqlmodel import SQLModel
+from sqlmodel.pool import StaticPool
 
 
 @pytest.fixture(name="session")

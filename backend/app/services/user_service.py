@@ -1,10 +1,15 @@
-from typing import Optional, List
+from typing import Optional
 from uuid import UUID
 
-from sqlmodel import Session, select, or_
-
-from app.models.user_model import User, UserCreate, UserUpdate
-from app.core.security import get_password, verify_password, UnauthorizedError
+from app.core.security import get_password
+from app.core.security import UnauthorizedError
+from app.core.security import verify_password
+from app.models.user_model import User
+from app.models.user_model import UserCreate
+from app.models.user_model import UserUpdate
+from sqlmodel import or_
+from sqlmodel import select
+from sqlmodel import Session
 
 
 class UserExistsError(RuntimeError):
@@ -17,7 +22,7 @@ class UserNotFoundError(RuntimeError):
 
 async def check_user_exists(user: UserCreate, session: Session) -> None:
     statement = select(User).where(
-        or_(User.username == user.username, User.email == user.email)
+        or_(User.username == user.username, User.email == user.email),
     )
     results = session.exec(statement).all()
     if len(results) > 0:
@@ -25,7 +30,6 @@ async def check_user_exists(user: UserCreate, session: Session) -> None:
 
 
 async def create_user(*, session: Session, user: UserCreate) -> User:
-
     await check_user_exists(user=user, session=session)
 
     user_in = User(
@@ -45,7 +49,9 @@ async def create_user(*, session: Session, user: UserCreate) -> User:
 
 
 async def authenticate(
-    username: str, password: str, session: Session
+    username: str,
+    password: str,
+    session: Session,
 ) -> Optional[User]:
     user = await get_user_by_name(username=username, session=session)
     if not user:
@@ -57,7 +63,6 @@ async def authenticate(
 
 
 async def get_user_by_name(username: str, session: Session) -> Optional[User]:
-
     statement = select(User).where(User.username == username)
     results = session.exec(statement)
     user = results.first()
@@ -66,7 +71,6 @@ async def get_user_by_name(username: str, session: Session) -> Optional[User]:
 
 
 async def get_user_by_id(id: UUID, session: Session) -> Optional[User]:
-
     statement = select(User).where(User.id == id)
     results = session.exec(statement)
     user = results.first()
@@ -75,7 +79,6 @@ async def get_user_by_id(id: UUID, session: Session) -> Optional[User]:
 
 
 async def update_user(id: UUID, data: UserUpdate, session: Session) -> User:
-
     statement = select(User).where(User.id == id)
     results = session.exec(statement)
     user = results.first()
