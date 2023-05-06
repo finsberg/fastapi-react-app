@@ -18,7 +18,6 @@ export function UserProfile(): JSX.Element {
   const [loading, setLoading] = useState(false)
 
   function fetchUser() {
-    console.log('Fetch user')
     setLoading(true)
     reset()
     setLoading(false)
@@ -41,7 +40,7 @@ export function UserProfile(): JSX.Element {
         p={6}
         my={12}
       >
-        {user === undefined || loading ? (
+        {user === null || loading ? (
           <Center mt={6}>
             <Spinner
               thickness="4px"

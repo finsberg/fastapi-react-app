@@ -18,7 +18,6 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { ThemeToggler } from '../Theme/ThemeToggler'
-// import { LoginUserType } from './UserType.types'
 
 export type LoginUserProps = {
   username: string

@@ -21,10 +21,10 @@ import {
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import axiosInstance from '../../services/axios'
 import { useForm } from 'react-hook-form'
-import { LoginUserType } from '../Auth/UserType.types'
+import { RegisterUserProps } from '../Auth/Register'
 
 export type UserProfileEditType = {
-  defaultValues?: LoginUserType
+  defaultValues?: RegisterUserProps
   onSuccess: () => void
 }
 
@@ -45,8 +45,6 @@ export const UserProfileEdit = ({
   const [showPassword, setShowPassword] = useState(false)
 
   const onSubmit = async (values: LoginUserType) => {
-    console.log('Data = ', values)
-
     try {
       await axiosInstance.put(`/users/${defaultValues?.id}`, values)
 
